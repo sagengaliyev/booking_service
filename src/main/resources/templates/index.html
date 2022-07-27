@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>INDEX PAGE</title>
+</head>
+<body>
+
+<p th:if=""></p>
+
+<form th:if="$userDTO!='anonymous'" th:action="@{/logout">
+    <input type="submit" value="logout">
+
+</form>
+
+<h2>Index page!</h2>
+
+<a th:href="@{/login}">Login page</a>
+<a th:href="@{/registration}">Registration page</a>
+<a th:href="@{/foruser}">For user page</a>
+<a th:href="@{/foradmin}">For admin page</a>
+</body>
+</html>

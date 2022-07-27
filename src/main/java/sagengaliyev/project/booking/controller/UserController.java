@@ -24,4 +24,10 @@ public class UserController {
         return new ResponseEntity<List<User>>(userService.getUsers(), HttpStatus.OK);
     }
 
+    @PostMapping("/register")
+    public ResponseEntity<String> register(@RequestBody UserDTO userDTO){
+        userService.register(userDTO);
+        return new ResponseEntity<String>(HttpStatus.OK);
+    }
+
 }

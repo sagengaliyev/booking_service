@@ -1,17 +1,23 @@
 package sagengaliyev.project.booking.dto;
 
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+import sagengaliyev.project.booking.model.Role;
 
-import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import java.util.HashSet;
+import java.util.Set;
 
 @Data
+@Getter
+@Setter
 public class UserDTO {
-
     private Long id;
     private String email;
     private String password;
+    private String username;
+    Set<Role> roles = new HashSet<>();
+
+
 
 }
