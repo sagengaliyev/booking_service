@@ -1,8 +1,8 @@
 package sagengaliyev.project.booking.mapper;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import sagengaliyev.project.booking.dto.UserDTO;
-import sagengaliyev.project.booking.model.Role;
 import sagengaliyev.project.booking.model.User;
 
 import java.util.Collections;
@@ -16,8 +16,8 @@ public class UserMapper {
         UserDTO userDTO = new UserDTO();
         userDTO.setId(user.getId());
         userDTO.setEmail(user.getEmail());
-        userDTO.setPassword(user.getPassword());
-        userDTO.setRoles(user.getRoles());
+        userDTO.setPassword( user.getPassword());
+
         return userDTO;
     }
 
@@ -26,7 +26,6 @@ public class UserMapper {
        user.setId(userDTO.getId());
        user.setEmail(userDTO.getEmail());
        user.setPassword(userDTO.getPassword());
-       user.setRoles(userDTO.getRoles());
        return user;
     }
 }

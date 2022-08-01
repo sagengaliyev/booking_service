@@ -2,6 +2,7 @@ package sagengaliyev.project.booking.controller;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -12,7 +13,7 @@ import sagengaliyev.project.booking.service.FlatService;
 import java.util.List;
 
 @RestController
-@RequestMapping("flats")
+@RequestMapping("/flats")
 public class FlatController {
     private final FlatService flatService;
 
@@ -21,30 +22,31 @@ public class FlatController {
     }
 
     @GetMapping("/show")
+    @PreAuthorize("hasRole('USER')")
     public ResponseEntity<List<FlatDTO>> getFlats(){
         List<FlatDTO> flats = flatService.getInfo();
-        return new ResponseEntity<List<FlatDTO>>(flats, HttpStatus.OK);
+        return new ResponseEntity<>(flats, HttpStatus.OK);
     }
 
     @DeleteMapping(value = "/delete", consumes = "application/json")
     @ResponseBody
     public ResponseEntity<Integer> deleteFlat(@RequestBody FlatDTO flatDTO){
         flatService.deleteById(flatDTO);
-        return new ResponseEntity<Integer>(HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PostMapping(value = "/add",consumes = "application/json")
     @ResponseBody
     public ResponseEntity<String> addFlat(@RequestBody FlatDTO flatDTO){
         flatService.addFlat(flatDTO);
-        return new ResponseEntity<String>(HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PostMapping(value = "/update",consumes = "application/json")
     @ResponseBody
     public ResponseEntity<String> updateFlat(@RequestBody FlatDTO flatDTO){
         flatService.updateById(flatDTO);
-        return new ResponseEntity<String>(HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @GetMapping(value = "/personal",consumes = "application/json")
@@ -52,9 +54,9 @@ public class FlatController {
     public ResponseEntity<List<Flat>> showById(@RequestBody FlatDTO flatDTO){
         List<Flat> flat = flatService.getFlatById(flatDTO);
         if(!flat.isEmpty()) {
-            return new ResponseEntity<List<Flat>>(flat, HttpStatus.OK);
+            return new ResponseEntity<>(flat, HttpStatus.OK);
         } else {
-            return new ResponseEntity<List<Flat>>(HttpStatus.NO_CONTENT);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
     }
 
