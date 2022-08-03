@@ -13,7 +13,7 @@ import sagengaliyev.project.booking.service.FlatService;
 import java.util.List;
 
 @RestController
-@RequestMapping("/flats")
+@RequestMapping("/api/flats")
 public class FlatController {
     private final FlatService flatService;
 
@@ -22,7 +22,6 @@ public class FlatController {
     }
 
     @GetMapping("/show")
-    @PreAuthorize("hasRole('USER')")
     public ResponseEntity<List<FlatDTO>> getFlats(){
         List<FlatDTO> flats = flatService.getInfo();
         return new ResponseEntity<>(flats, HttpStatus.OK);
@@ -42,7 +41,7 @@ public class FlatController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @PostMapping(value = "/update",consumes = "application/json")
+    @PutMapping(value = "/update",consumes = "application/json")
     @ResponseBody
     public ResponseEntity<String> updateFlat(@RequestBody FlatDTO flatDTO){
         flatService.updateById(flatDTO);

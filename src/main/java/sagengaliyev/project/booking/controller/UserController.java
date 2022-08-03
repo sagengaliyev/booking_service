@@ -22,7 +22,7 @@ public class UserController {
     }
 
     @GetMapping("/show")
-    @PreAuthorize("hasRole('USER')")
+
     public ResponseEntity<List<User>> getUsers(){
         return new ResponseEntity<>(userService.getUsers(), HttpStatus.OK);
     }

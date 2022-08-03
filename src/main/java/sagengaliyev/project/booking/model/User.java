@@ -22,7 +22,9 @@ public class User  {
     @Column(name = "Password")
     private String password;
     @Enumerated(EnumType.STRING)
-    private Role role;
+    private Role role = Role.USER;
+    @Enumerated(EnumType.STRING)
+    private Status status = Status.ACTIVE;
 
 
 

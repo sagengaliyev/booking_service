@@ -1,65 +1,69 @@
 package sagengaliyev.project.booking.configuration;
 
-import org.jetbrains.annotations.NotNull;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import sagengaliyev.project.booking.model.User;
-import sagengaliyev.project.booking.service.UserService;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import sagengaliyev.project.booking.model.Permission;
+import sagengaliyev.project.booking.model.Role;
 
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    private final UserService userService;
     private final UserDetailsService userDetailsService;
 
-    public SecurityConfig(UserService userService, UserDetailsService userDetailsService) {
-        this.userService = userService;
+    public SecurityConfig(@Qualifier("userDetailsServiceImpl") UserDetailsService userDetailsService) {
         this.userDetailsService = userDetailsService;
-    }
-
-    public BCryptPasswordEncoder encoder(){
-        return new BCryptPasswordEncoder(10);
     }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-
         http
                 .csrf().disable()
                 .authorizeRequests()
-                .antMatchers("*/*", "/api/user/register").permitAll()
-                .anyRequest()
-                .authenticated()
+                .antMatchers("/api/flats/show", "/api/user/register" ).permitAll()
+                .antMatchers(HttpMethod.POST,"/api/flats/add").hasAuthority(Permission.READ.getPermission())
+                .antMatchers(HttpMethod.POST,"/api/flats/personal").hasAuthority(Permission.READ.getPermission())
+                .antMatchers(HttpMethod.DELETE,"/api/flats/delete").hasAuthority(Permission.DELETE.getPermission())
+                .antMatchers(HttpMethod.PUT,"/api/flats/update").hasAuthority(Permission.DELETE.getPermission())
+                .anyRequest().authenticated()
                 .and()
-                .formLogin().loginPage("signup_form")
+                .formLogin().permitAll()
+                .and()
+                .logout()
                 .and()
                 .httpBasic();
     }
 
-    @Autowired
-    public void configureGlobal(@NotNull AuthenticationManagerBuilder auth)
-            throws Exception {
-        auth.inMemoryAuthentication()
-                .withUser("admin")
-                .password("{noop}password")
-                .roles("USER");
+    @Bean
+    protected BCryptPasswordEncoder passwordEncoder(){
+        return new BCryptPasswordEncoder(12);
     }
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(userDetailsService).passwordEncoder(encoder());
+        auth.authenticationProvider(daoAuthenticationProvider());
     }
 
+
+
+    @Bean
+    protected DaoAuthenticationProvider daoAuthenticationProvider(){
+        DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
+        daoAuthenticationProvider.setPasswordEncoder(passwordEncoder());
+        daoAuthenticationProvider.setUserDetailsService(userDetailsService);
+        return daoAuthenticationProvider;
+    }
 }
