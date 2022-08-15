@@ -4,6 +4,7 @@ import lombok.*;
 
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.util.*;
 
 @Data
@@ -25,6 +26,9 @@ public class User  {
     private Role role = Role.USER;
     @Enumerated(EnumType.STRING)
     private Status status = Status.ACTIVE;
+    @OneToMany(mappedBy = "owner")
+    private List<Flat> flats;
+
 
 
 

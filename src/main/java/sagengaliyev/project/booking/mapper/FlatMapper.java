@@ -25,4 +25,10 @@ public class FlatMapper {
         flat.setPrice(flatDTO.getPrice());
         return flat;
     }
+
+    public Flat toEntityFromId(Long id){
+        Flat flat = new Flat();
+        flat.setId(id);
+        return flat;
+    }
 }

@@ -10,9 +10,11 @@ public class UserMapper {
 
 
     private final BCryptPasswordEncoder encoder;
+    private final FlatMapper flatMapper;
 
-    public UserMapper(BCryptPasswordEncoder encoder) {
+    public UserMapper(BCryptPasswordEncoder encoder, FlatMapper flatMapper) {
         this.encoder = encoder;
+        this.flatMapper = flatMapper;
     }
 
 
@@ -32,5 +34,11 @@ public class UserMapper {
        user.setEmail(userDTO.getEmail());
        user.setPassword(encoder.encode(userDTO.getPassword()));
        return user;
+    }
+
+    public User toEntityFromId(Long id) {
+        User user = new User();
+        user.setId(id);
+        return user;
     }
 }
